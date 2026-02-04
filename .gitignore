@@ -6,6 +6,82 @@ out/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+Makefile
+compile_commands.json
+install_manifest.txt
+Testing/
+CTestTestfile.cmake
+
+# Compiled binaries
+*.exe
+*.dll
+*.lib
+*.exp
+*.manifest
+*.res
+*.idb
+*.ipdb
+*.iobj
+*.pch
+*.rsp
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.log
+*.bak
+*.swp
+*.swo
+*.swn
+*.stackdump
+
+# IDE files
+.vs/
+*.suo
+*.user
+*.vcxproj*
+*.sln
+*.ncb
+*.sdf
+*.opensdf
+*.cache
+*.dbmdl
+*.dbproj.schemaview
+*.dbproj.user
+*.vssscc
+*.vspscc
+*.vsscc
+*.scc
+*.psess
+*.vsp
+*.vsix
+*.docstates
+*.pfx
+*.publish.xml
+*.wixproj*
+*.wixobj
+*.wixpdb
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS/Linux
+*.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Installer output
+dist/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
 
 # Compiled binaries
 *.exe
