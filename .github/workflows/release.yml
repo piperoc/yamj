@@ -1,5 +1,5 @@
 
-# Last updated: 2026-02-04 15:32 UTC
+# Last updated: 2026-02-04 15:49 UTC
 name: Build and Release Installer
 
 on:
@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
