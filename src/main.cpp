@@ -9,9 +9,8 @@
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 // Constants
-constexpr int ID_TRAY_ICON = 1;
+
 constexpr int ID_TIMER = 2;
-constexpr int WM_TRAYICON = WM_USER + 1;
 
 constexpr int ID_INTERVAL_EDIT = 101;
 constexpr int ID_MOVEMENT_EDIT = 102;
@@ -29,7 +28,7 @@ struct AppState {
     HWND startBtn = nullptr;
     HWND intervalLabel = nullptr;
     HWND movementLabel = nullptr;
-    NOTIFYICONDATAW nid = {};
+    // Tray icon removed
     HFONT hFont = nullptr;
     bool isRunning = false;
     int intervalMs = 1000;
@@ -59,14 +58,7 @@ void JiggleMouse(int movement) {
     MoveMouse(0, -movement);
 }
 
-void UpdateTrayTip() {
-    if (g_app.isRunning) {
-        wcscpy_s(g_app.nid.szTip, L"YAMJ - Running");
-    } else {
-        wcscpy_s(g_app.nid.szTip, L"YAMJ - Stopped");
-    }
-    Shell_NotifyIconW(NIM_MODIFY, &g_app.nid);
-}
+
 
 void StartJiggling() {
     // Read values from edit controls
@@ -84,7 +76,7 @@ void StartJiggling() {
     SetWindowTextW(g_app.startBtn, L"Stop");
     EnableWindow(g_app.intervalEdit, FALSE);
     EnableWindow(g_app.movementEdit, FALSE);
-    UpdateTrayTip();
+
 }
 
 void StopJiggling() {
@@ -93,32 +85,10 @@ void StopJiggling() {
     SetWindowTextW(g_app.startBtn, L"Start");
     EnableWindow(g_app.intervalEdit, TRUE);
     EnableWindow(g_app.movementEdit, TRUE);
-    UpdateTrayTip();
+
 }
 
-void AddTrayIcon(HWND hwnd) {
-    g_app.nid.cbSize = sizeof(NOTIFYICONDATAW);
-    g_app.nid.hWnd = hwnd;
-    g_app.nid.uID = ID_TRAY_ICON;
-    g_app.nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-    g_app.nid.uCallbackMessage = WM_TRAYICON;
-    g_app.nid.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-    wcscpy_s(g_app.nid.szTip, L"YAMJ - Stopped");
-    Shell_NotifyIconW(NIM_ADD, &g_app.nid);
-}
 
-void RemoveTrayIcon() {
-    Shell_NotifyIconW(NIM_DELETE, &g_app.nid);
-}
-
-void MinimizeToTray() {
-    ShowWindow(g_app.hwnd, SW_HIDE);
-}
-
-void RestoreFromTray() {
-    ShowWindow(g_app.hwnd, SW_SHOW);
-    SetForegroundWindow(g_app.hwnd);
-}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
@@ -159,7 +129,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         SetControlFont(g_app.movementEdit);
         SetControlFont(g_app.startBtn);
 
-        AddTrayIcon(hwnd);
+
 
         // Create menu bar
         HMENU hMenuBar = CreateMenu();
@@ -216,27 +186,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         }
         return 0;
 
-    case WM_TRAYICON:
-        if (lParam == WM_LBUTTONDBLCLK) {
-            RestoreFromTray();
-        } else if (lParam == WM_RBUTTONUP) {
-            // Right-click on tray - toggle start/stop
-            if (g_app.isRunning) {
-                StopJiggling();
-            } else {
-                StartJiggling();
-            }
-        }
-        return 0;
 
-    case WM_SIZE:
-        if (wParam == SIZE_MINIMIZED) {
-            MinimizeToTray();
-        }
-        return 0;
+
+
 
     case WM_CLOSE:
-        MinimizeToTray();
+        DestroyWindow(hwnd);
         return 0;
 
     case WM_CTLCOLORSTATIC: {
@@ -247,7 +202,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
     case WM_DESTROY:
         StopJiggling();
-        RemoveTrayIcon();
         if (g_app.hFont) DeleteObject(g_app.hFont);
         PostQuitMessage(0);
         return 0;
