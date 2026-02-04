@@ -1,0 +1,50 @@
+name: Build and Release Installer
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ninja
+        uses: ashutoshvarma/setup-ninja@v1
+
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v1
+
+      - name: Set up LLVM
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: 17
+
+      - name: Install NSIS
+        run: choco install nsis -y
+
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - name: Configure (Release)
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCPACK_PACKAGE_VERSION=${{ env.TAG_VERSION }}
+
+      - name: Build (Release)
+        run: cmake --build build --config Release
+
+      - name: Package with CPack
+        run: cpack --config build/CPackConfig.cmake
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.exe
+            *.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
