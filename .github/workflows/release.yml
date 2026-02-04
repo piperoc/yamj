@@ -1,5 +1,5 @@
 
-# Last updated: 2026-02-04 16:29 UTC
+# Last updated: 2026-02-04 16:36 UTC
 name: Build and Release Installer
 
 
@@ -7,8 +7,7 @@ on:
   release:
     types: [published]
 
-env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
 
 jobs:
   build:
@@ -17,19 +16,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Ninja
-        uses: ninja-build/setup-ninja@v1
 
-      - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v1
+      - name: Download Ninja
+        run: |
+          curl -L -o ninja-win.zip https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip
+          unzip ninja-win.zip -d ninja_bin
+          echo "${{ github.workspace }}/ninja_bin" >> $GITHUB_PATH
 
-      - name: Set up LLVM
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: 17
+      - name: Install CMake
+        run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
+
+      - name: Install LLVM
+        run: choco install llvm -y
 
       - name: Install NSIS
         run: choco install nsis -y
+
 
       - name: Extract version from tag
         id: get_version
