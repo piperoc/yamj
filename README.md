@@ -90,4 +90,4 @@ This project is licensed under the terms of the **GNU General Public License v3.
 
 Copyright (C) 2026 Costantino Pipero
 
-See [LICENSE.txt](LICENSE.txt) for details.
+See [LICENSE](LICENSE) for details.
