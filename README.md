@@ -69,19 +69,43 @@ This project includes an example VS Code build configuration in `.vscode/tasks.j
 
 > **Note:** The build tasks automatically launch the Visual Studio Developer PowerShell for proper environment setup.
 
+
+## Packaging an Installer (NSIS)
+
+To create a Windows installer (.exe) for YAMJ, you need to install [NSIS](https://nsis.sourceforge.io/Download):
+
+1. Download and install NSIS from the official website.
+2. Make sure `makensis.exe` is in your system PATH (the NSIS installer usually does this automatically).
+3. Build your project in Release mode:
+
+    ```powershell
+    cmake --preset clang-release
+    cmake --build --preset clang-release
+    ```
+
+4. Run CPack to generate the installer:
+
+    ```powershell
+    cpack --config build/release/CPackConfig.cmake
+    ```
+
+    This will create a `YAMJ-<version>-win64.exe` installer in the `build/release/` directory.
+
+### Troubleshooting
+
+- If you get an error about NSIS not found, ensure NSIS is installed and `makensis.exe` is in your PATH.
+- You can also generate a portable ZIP package using CPack (no installer required).
+
 ## Usage
 
-Simply run the executable:
+After building or installing, simply run the executable:
 
 ```powershell
-.\build\debug\yamj.exe
+.\build\release\yamj.exe
 ```
 
 - Set your desired interval and movement in the GUI
 - Click **Start** to begin jiggling
-- Minimize to send to system tray
-- Double-click tray icon to restore
-- Right-click tray icon to toggle Start/Stop
 - Use the Help and About menu for more info
 
 ## License

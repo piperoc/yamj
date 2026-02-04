@@ -1,3 +1,6 @@
+# install files
+YAMJ-*-win64.*
+
 # Build directories
 build/
 out/
