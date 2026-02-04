@@ -1,5 +1,5 @@
 
-# Last updated: 2026-02-04 15:49 UTC
+# Last updated: 2026-02-04 16:29 UTC
 name: Build and Release Installer
 
 
@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Ninja
-        uses: anton-rudeshko/setup-ninja@v1
+        uses: ninja-build/setup-ninja@v1
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1
