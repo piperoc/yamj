@@ -17,8 +17,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Ninja
-        run: choco install ninja -y
+      - name: Set up Ninja
+        uses: anton-rudeshko/setup-ninja@v1
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v1
