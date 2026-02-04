@@ -14,6 +14,5 @@ cmake_install.cmake
 
 # IDE files
 .vs/
-.vscode/
 *.suo
 *.user
